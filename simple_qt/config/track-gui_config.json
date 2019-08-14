@@ -1,0 +1,54 @@
+{
+  "startup_ssid":"fed-vu",
+  "daemon_ip":"10.42.0.10",
+  "timeout":2.0,
+  "update_rate":0.25,
+  "gpredict":{
+    "ip":"0.0.0.0",
+    "port":4533
+  },
+  "ssid_map":{
+    "fed-vu":0,
+    "ham-vul":1,
+    "3m0":2,
+    "4m5":3,
+    "wx":4
+  },
+  "ssid": [
+    {
+      "name":"fed-vu",
+      "gui_name":"FED VHF/UHF",
+      "port":2000,
+      "home_az":180.0,
+      "home_el":0.0
+    },
+    {
+      "name":"ham-vul",
+      "gui_name":"HAM VHF/UHF/L",
+      "port":2001,
+      "home_az":180.0,
+      "home_el":0.0
+    },
+    {
+      "name":"3m0",
+      "gui_name":"3.0m Dish",
+      "port":2002,
+      "home_az":180.0,
+      "home_el":90.0
+    },
+    {
+      "name":"4m5",
+      "gui_name":"4.5m Dish",
+      "port":2003,
+      "home_az":180.0,
+      "home_el":90.0
+    },
+    {
+      "name":"wx",
+      "gui_name":"NOAA WX",
+      "port":2004,
+      "home_az":180.0,
+      "home_el":0.0
+    }
+  ]
+}

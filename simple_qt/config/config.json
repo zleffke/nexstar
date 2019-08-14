@@ -1,0 +1,37 @@
+{
+  "thread_enable":{
+    "nexstar":true
+  },
+  "main":{
+    "name":"nexstar_qt",
+    "log":{
+      "path":"/log/nexstar",
+      "verbose":true,
+      "level":"DEBUG"
+    }
+  },
+  "nexstar":{
+    "name":"nexstar",
+    "dev":"/dev/ttyUSB0",
+    "baud":9600,
+    "timeout":2.0,
+    "update_rate":0.5,
+    "home_az":0.0,
+    "home_el":0.0,
+    "log":{
+      "path":"/log/nexstar",
+      "verbose":true,
+      "level":"DEBUG"
+    }
+  },
+  "geolocation":{
+    "city_state":"Fairlawn, VA",
+    "latitude":37.148729,
+    "longitude":-80.578413,
+    "altitude":584.0
+  },
+  "gpredict":{
+    "ip":"0.0.0.0",
+    "port":4533
+  }
+}
