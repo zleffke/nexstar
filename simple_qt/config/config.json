@@ -2,6 +2,7 @@
   "thread_enable":{
     "nexstar":true
   },
+  "update_rate":0.25,
   "main":{
     "name":"nexstar_qt",
     "log":{

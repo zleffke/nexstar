@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#version 2.1
 
 import socket
 import os
@@ -8,11 +9,9 @@ import time
 import argparse
 import datetime
 import json
-import subprocess
 from binascii import *
-from gui.nexstar_gui import *
 #from track_gui import *
-#from nexstar import *
+from nexstar import *
 
 if __name__ == '__main__':
     """ Main entry point to start the service. """
@@ -38,9 +37,7 @@ if __name__ == '__main__':
                        action="store")
     args = parser.parse_args()
 #--------END Command Line argument parser------------------------------------------------------
-    #print(chr(27) + "[2J")
-    subprocess.run(["reset"])
-    print(sys.path)
+    print(chr(27) + "[2J")
     fp_cfg = '/'.join([args.cfg_path,args.cfg_file])
     print (fp_cfg)
     if not os.path.isfile(fp_cfg) == True:
@@ -75,18 +72,66 @@ if __name__ == '__main__':
         })
 
     print (json.dumps(cfg, indent=4))
+    #sys.exit()
+    #track = vtp(options.ip, port, options.uid, options.ssid, 2.0)
+    ns = NexstarHandController(cfg['nexstar']['dev'])
+    #track = vtp(cfg)
 
-    #create nexstar object
-    #ns = NexstarHandController(cfg['nexstar']['dev'])
 
+    #print("Model: {}".format(ns.getModel()))
 
-    app = Qt.QApplication(sys.argv)
-    app.setStyle('Windows')
-    win = MainWindow(cfg)
+    [last_az,last_el] = ns.getPosition()
+    print("Current Az: {:f}".format(last_az))
+    print("Current El: {:f}".format(last_el))
+    az_err = 1.0
+    el_err = 1.0
+    time.sleep(1)
+    print("Slewing to 0,0")
+    ns.gotoPosition(0,0)
+
+    #while ((abs(az_err)>=0.01) and (abs(el_err)>=0.01)):
+    while ns.getGotoInProgress():
+        [cur_az,cur_el] = ns.getPosition()
+        print("Current Az/El: {:f}/{:f}".format(cur_az,cur_el))
+        az_err = cur_az - last_az
+        el_err = cur_el - last_el
+        print("  Error Az/El: {:f}/{:f}".format(az_err,el_err))
+        last_az = cur_az
+        last_el = cur_el
+        #print(ns.getGotoInProgress())
+
+    #dev_ver = ns.getDeviceVersion(0)
+    #print(dev_ver)
+
+    status_report(ns)
+
+    print("Home!!!...")
+
+    print("slewing...")
+    count = 0
+    now = datetime.datetime.utcnow()
+    stop_time = now + datetime.timedelta(seconds=5)
+    ns.slew_fixed(NexstarDeviceId.AZM_RA_MOTOR,9)
+    while (stop_time - now).total_seconds() > 0:
+        #ns.slew_fixed(NexstarDeviceId.AZM_RA_MOTOR,9)
+        [cur_az,cur_el] = ns.getPosition()
+        now = datetime.datetime.utcnow()
+        print("{:s} | Current Az/El: {:f}/{:f}".format(now.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),cur_az,cur_el))
+
+    ns.slew_fixed(NexstarDeviceId.AZM_RA_MOTOR,0)
+
+    [cur_az,cur_el] = ns.getPosition()
+    print("Current Az/El: {:f}/{:f}".format(cur_az,cur_el))
+
+    ns.close()
+
+    sys.exit()
+
+    #app = QtGui.QApplication(sys.argv)
+    #win = MainWindow(cfg)
     #win.set_callback(track)
 
     #win.setGpredictCallback(gpred)
 
     sys.exit(app.exec_())
-    #ns.close()
     sys.exit()
